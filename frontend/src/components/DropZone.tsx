@@ -84,10 +84,10 @@ const DropZone: React.FC = () => {
 
   return (
     <div
-      className={`relative w-full h-56 border-2 border-dashed rounded-4xl flex flex-col items-center justify-center transition-all duration-500 overflow-hidden group ${
+      className={`relative w-full h-64 border-2 border-dashed rounded-[2rem] flex flex-col items-center justify-center transition-all duration-500 overflow-hidden group ${
         isDragActive 
-          ? 'border-primary bg-primary/5 scale-[1.01]' 
-          : 'border-border/60 bg-secondary/20 hover:bg-secondary/40 hover:border-primary/30'
+          ? 'border-primary bg-primary/5 scale-[1.01] shadow-[0_0_40px_rgba(255,255,255,0.05)]' 
+          : 'border-border bg-secondary/10 hover:bg-secondary/20 hover:border-primary/40'
       }`}
       onDragOver={onDragOver}
       onDragLeave={onDragLeave}
@@ -113,34 +113,34 @@ const DropZone: React.FC = () => {
         title=""
       />
       
-      <div className="flex flex-col items-center pointer-events-none text-muted-foreground relative z-20">
+      <div className="flex flex-col items-center pointer-events-none text-muted-foreground relative z-20 px-6 text-center">
         <motion.div 
           animate={{ 
-            y: isDragActive ? -12 : 0,
-            scale: isDragActive ? 1.1 : 1,
-            backgroundColor: isDragActive ? "var(--primary)" : "var(--background)"
+            y: isDragActive ? -16 : 0,
+            scale: isDragActive ? 1.15 : 1,
+            backgroundColor: isDragActive ? "var(--primary)" : "var(--secondary)"
           }}
-          transition={{ type: "spring", stiffness: 300, damping: 20 }}
-          className="p-5 rounded-3xl shadow-xl mb-5 flex items-center justify-center ring-1 ring-border/50"
+          transition={{ type: "spring", stiffness: 400, damping: 25 }}
+          className="w-20 h-20 rounded-[2rem] shadow-2xl mb-6 flex items-center justify-center border border-border group-hover:border-primary/30 transition-colors"
         >
           <UploadCloud className={`w-10 h-10 transition-colors ${isDragActive ? 'text-primary-foreground' : 'text-primary'}`} />
         </motion.div>
         
-        <div className="text-center">
-          <p className={`font-black text-xl transition-colors ${isDragActive ? 'text-primary' : 'text-foreground'}`}>
-            {isDragActive ? 'Release to Share' : 'Drop anything here'}
+        <div className="space-y-2">
+          <p className={`font-black text-2xl tracking-tight transition-colors ${isDragActive ? 'text-primary' : 'text-foreground'}`}>
+            {isDragActive ? 'Drop to start sharing' : 'Drop files here'}
           </p>
-          <p className="text-sm font-medium mt-1 opacity-60">
+          <p className="text-sm font-bold uppercase tracking-[0.2em] opacity-40">
             {isDragActive ? 'Instantly sending to all peers' : 'or click to browse your files'}
           </p>
         </div>
       </div>
 
       {/* Decorative corners */}
-      <div className="absolute top-4 left-4 w-4 h-4 border-t-2 border-l-2 border-primary/20 rounded-tl-lg" />
-      <div className="absolute top-4 right-4 w-4 h-4 border-t-2 border-r-2 border-primary/20 rounded-tr-lg" />
-      <div className="absolute bottom-4 left-4 w-4 h-4 border-b-2 border-l-2 border-primary/20 rounded-bl-lg" />
-      <div className="absolute bottom-4 right-4 w-4 h-4 border-b-2 border-r-2 border-primary/20 rounded-br-lg" />
+      <div className="absolute top-6 left-6 w-6 h-6 border-t-2 border-l-2 border-primary/20 rounded-tl-xl" />
+      <div className="absolute top-6 right-6 w-6 h-6 border-t-2 border-r-2 border-primary/20 rounded-tr-xl" />
+      <div className="absolute bottom-6 left-6 w-6 h-6 border-b-2 border-l-2 border-primary/20 rounded-bl-xl" />
+      <div className="absolute bottom-6 right-6 w-6 h-6 border-b-2 border-r-2 border-primary/20 rounded-br-xl" />
 
       <CompressionModal
         isOpen={showCompressionModal}

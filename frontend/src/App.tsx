@@ -39,24 +39,27 @@ function App() {
   }, [isDarkMode]);
 
   return (
-    <div className={`min-h-[100dvh] flex flex-col bg-background text-foreground transition-all duration-700 font-sans selection:bg-primary/10 selection:text-primary ${isDarkMode ? 'dark mesh-bg' : ''}`}>
+    <div className={`min-h-[100dvh] flex flex-col bg-background text-foreground transition-all duration-700 font-sans selection:bg-primary selection:text-primary-foreground ${isDarkMode ? 'dark mesh-bg' : ''}`}>
       {/* Dynamic Background Elements */}
       <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]" />
-        <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-primary/5 blur-[120px]" />
+        <div className="absolute top-[-20%] left-[-10%] w-[60%] h-[60%] rounded-full bg-primary/10 blur-[140px] animate-pulse" />
+        <div className="absolute bottom-[-20%] right-[-10%] w-[60%] h-[60%] rounded-full bg-primary/5 blur-[140px]" />
+        {isDarkMode && (
+          <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] rounded-full bg-blue-500/5 blur-[120px]" />
+        )}
       </div>
 
-      <div className="fixed top-6 right-6 z-[100]">
+      <div className="fixed top-8 right-8 z-[100]">
         <motion.button
-          whileHover={{ scale: 1.05 }}
+          whileHover={{ scale: 1.05, y: -2 }}
           whileTap={{ scale: 0.95 }}
           onClick={toggleDarkMode}
-          className="p-3 rounded-2xl bg-card/60 backdrop-blur-2xl border border-border/80 shadow-2xl hover:bg-secondary/80 transition-all ring-1 ring-white/10"
+          className="p-3.5 rounded-[1.25rem] bg-card border border-border shadow-[0_20px_40px_-12px_rgba(0,0,0,0.5)] hover:border-primary/20 transition-all ring-1 ring-white/5 group"
         >
           {isDarkMode ? (
-            <Sun className="w-5 h-5 text-amber-400 drop-shadow-[0_0_8px_rgba(251,191,36,0.4)]" />
+            <Sun className="w-5 h-5 text-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.5)] group-hover:rotate-12 transition-transform" />
           ) : (
-            <Moon className="w-5 h-5 text-indigo-600" />
+            <Moon className="w-5 h-5 text-indigo-600 group-hover:-rotate-12 transition-transform" />
           )}
         </motion.button>
       </div>

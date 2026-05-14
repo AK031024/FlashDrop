@@ -76,25 +76,25 @@ const NearbyDevices: React.FC<Props> = ({ onRoomJoined }) => {
 
   if (nearbyDevices.length === 0 && !pendingIncomingRequest) {
     return (
-      <div className="flex flex-col items-center py-6 gap-4 opacity-80">
-        <div className="relative w-16 h-16 flex items-center justify-center">
+      <div className="flex flex-col items-center py-8 gap-5">
+        <div className="relative w-20 h-20 flex items-center justify-center">
           <motion.div
-            animate={{ scale: [1, 1.8], opacity: [0.3, 0] }}
-            transition={{ duration: 2, repeat: Infinity, ease: 'easeOut' }}
+            animate={{ scale: [1, 2], opacity: [0.2, 0] }}
+            transition={{ duration: 3, repeat: Infinity, ease: 'easeOut' }}
             className="absolute inset-0 bg-primary/20 rounded-full"
           />
           <motion.div
-            animate={{ scale: [1, 1.4], opacity: [0.5, 0] }}
-            transition={{ duration: 2, delay: 0.5, repeat: Infinity, ease: 'easeOut' }}
+            animate={{ scale: [1, 1.5], opacity: [0.3, 0] }}
+            transition={{ duration: 3, delay: 0.8, repeat: Infinity, ease: 'easeOut' }}
             className="absolute inset-0 bg-primary/20 rounded-full"
           />
-          <div className="relative z-10 w-10 h-10 bg-primary/10 rounded-full flex items-center justify-center border border-primary/20">
-            <Radar className="w-5 h-5 text-primary" />
+          <div className="relative z-10 w-12 h-12 bg-secondary rounded-2xl flex items-center justify-center border border-border shadow-xl">
+            <Radar className="w-6 h-6 text-primary" />
           </div>
         </div>
-        <div className="text-center">
-          <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Scanning Airwaves</p>
-          <p className="text-[9px] font-bold text-muted-foreground/50 mt-1">Looking for nearby devices...</p>
+        <div className="text-center space-y-1">
+          <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">Searching for devices</p>
+          <p className="text-[9px] font-bold text-muted-foreground/40 uppercase tracking-widest">Looking for FlashDrop on your network</p>
         </div>
       </div>
     );
@@ -126,44 +126,46 @@ const NearbyDevices: React.FC<Props> = ({ onRoomJoined }) => {
                 <motion.button
                   key={device.id}
                   layout
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   onClick={() => !requestingDevice && handleTapDevice(device)}
                   className={`w-full group flex items-center gap-4 p-4 rounded-2xl border transition-all relative overflow-hidden ${
                     isPending 
-                      ? 'border-primary/50 bg-primary/5 ring-1 ring-primary/20' 
-                      : 'border-border/40 bg-secondary/20 hover:bg-secondary/40 hover:border-primary/30'
-                  } ${requestingDevice && !isPending ? 'opacity-40 grayscale pointer-events-none' : ''}`}
+                      ? 'border-primary bg-primary/5 ring-2 ring-primary/10' 
+                      : 'border-border bg-secondary/30 hover:bg-secondary/60 hover:border-primary/40 hover:-translate-y-0.5'
+                  } ${requestingDevice && !isPending ? 'opacity-30 grayscale pointer-events-none' : ''}`}
                 >
-                  <div className="relative z-10 w-10 h-10 rounded-xl bg-background flex items-center justify-center shadow-sm border border-border/50 transition-transform group-hover:scale-110">
-                    <DeviceIcon platform={device.platform} />
+                  <div className="relative z-10 w-12 h-12 rounded-xl bg-background flex items-center justify-center shadow-lg border border-border transition-transform group-hover:scale-105">
+                    <DeviceIcon platform={device.platform} size={24} />
                     {isPending && (
                       <motion.div
                         className="absolute inset-0 rounded-xl border-2 border-primary"
-                        animate={{ scale: [1, 1.2], opacity: [1, 0] }}
-                        transition={{ duration: 1, repeat: Infinity }}
+                        animate={{ scale: [1, 1.3], opacity: [1, 0] }}
+                        transition={{ duration: 1.5, repeat: Infinity }}
                       />
                     )}
                   </div>
                   
                   <div className="flex-1 text-left relative z-10 min-w-0">
-                    <p className="font-black text-sm text-foreground truncate tracking-tight">{device.name}</p>
-                    <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground mt-0.5">
-                      {isPending ? 'Requesting Access' : 'Tap to Connect'}
+                    <p className="font-bold text-base text-foreground truncate tracking-tight">{device.name}</p>
+                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground mt-0.5">
+                      {isPending ? 'Waiting for approval' : 'Tap to Connect'}
                     </p>
                   </div>
 
                   <div className="relative z-10">
                     {isPending ? (
                       <button
-                        className="p-2 bg-destructive/10 text-destructive rounded-lg hover:bg-destructive/20 transition-colors"
+                        className="p-2.5 bg-destructive/10 text-destructive rounded-xl hover:bg-destructive/20 transition-all active:scale-90"
                         onClick={(e) => { e.stopPropagation(); cancelRequest(); }}
                       >
-                        <X className="w-3.5 h-3.5" />
+                        <X className="w-4 h-4" />
                       </button>
                     ) : (
-                      <Wifi className="w-3.5 h-3.5 text-muted-foreground/30 group-hover:text-primary transition-colors" />
+                      <div className="p-2 rounded-lg bg-primary/5 group-hover:bg-primary/10 transition-colors">
+                        <Wifi className="w-4 h-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                      </div>
                     )}
                   </div>
                 </motion.button>

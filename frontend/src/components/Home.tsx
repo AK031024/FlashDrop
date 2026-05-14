@@ -81,73 +81,100 @@ const Home: React.FC = () => {
       >
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
       
-      <div className="flex flex-col items-center mb-10">
+      <div className="flex flex-col items-center mb-12">
         <motion.div 
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ delay: 0.2 }}
-          className="w-40 h-40 flex items-center justify-center mb-2"
+          transition={{ delay: 0.2, type: "spring", stiffness: 200, damping: 20 }}
+          className="w-24 h-24 sm:w-32 sm:h-32 flex items-center justify-center mb-6"
         >
-          <img src="/logo.png" alt="FlashDrop Logo" className="w-full h-full object-contain drop-shadow-[0_0_25px_rgba(45,212,191,0.4)]" />
+          <img src="/logo.png" alt="FlashDrop Logo" className="w-full h-full object-contain drop-shadow-[0_0_30px_rgba(255,255,255,0.2)]" />
         </motion.div>
-        <h1 className="text-4xl sm:text-5xl font-black tracking-tighter mb-3 text-shimmer">
+        <h1 className="text-4xl sm:text-6xl font-black tracking-tight mb-4 text-shimmer">
           FlashDrop
         </h1>
-        <p className="text-muted-foreground text-center text-balance font-medium">
-          Instant, encrypted, peer-to-peer file sharing between your devices.
+        <p className="text-lg sm:text-xl font-bold tracking-tight mb-3 text-center">
+          Instant encrypted file sharing
+        </p>
+        <p className="text-muted-foreground text-center text-balance font-medium text-sm sm:text-base max-w-[320px] mx-auto">
+          Create a secure room and transfer files instantly between devices — no accounts, no cloud.
         </p>
       </div>
 
-      <div className="space-y-8">
-        <button
-          onClick={handleCreateRoom}
-          disabled={loading}
-          className="w-full py-5 px-6 bg-primary text-primary-foreground rounded-2xl font-bold text-lg shadow-[0_8px_30px_rgb(255,255,255,0.1)] hover:shadow-[0_8px_30px_rgb(255,255,255,0.2)] hover:-translate-y-1 transition-all disabled:opacity-50 flex justify-center items-center gap-3 group active:scale-95"
-        >
-          {loading ? (
-            <div className="w-6 h-6 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
-          ) : (
-            <>
-              Create New Room
-              <motion.div
-                animate={{ x: [0, 5, 0] }}
-                transition={{ repeat: Infinity, duration: 1.5 }}
-              >
-                <Share2 className="w-5 h-5 opacity-70" />
-              </motion.div>
-            </>
-          )}
-        </button>
-
-        <div className="relative flex items-center py-2">
-          <div className="flex-grow border-t border-border/50"></div>
-          <span className="flex-shrink-0 mx-4 text-muted-foreground text-[10px] font-bold uppercase tracking-widest">or join existing</span>
-          <div className="flex-grow border-t border-border/50"></div>
+      <div className="space-y-10">
+        <div className="space-y-4">
+          <button
+            onClick={handleCreateRoom}
+            disabled={loading}
+            className="w-full py-5 px-6 bg-primary text-primary-foreground rounded-2xl font-black text-lg shadow-[0_20px_40px_-12px_rgba(255,255,255,0.2)] hover:shadow-[0_25px_50px_-12px_rgba(255,255,255,0.3)] hover:-translate-y-1 transition-all disabled:opacity-50 flex justify-center items-center gap-3 group active:scale-95 ring-1 ring-white/20"
+          >
+            {loading ? (
+              <div className="w-6 h-6 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin" />
+            ) : (
+              <>
+                Create Room
+                <motion.div
+                  animate={{ x: [0, 4, 0] }}
+                  transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                >
+                  <Share2 className="w-5 h-5 opacity-80" />
+                </motion.div>
+              </>
+            )}
+          </button>
+          
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              <div className="w-1 h-1 rounded-full bg-green-500" />
+              End-to-End Encrypted
+            </div>
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              <div className="w-1 h-1 rounded-full bg-blue-500" />
+              Peer-to-Peer
+            </div>
+            <div className="flex items-center gap-1.5 text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+              <div className="w-1 h-1 rounded-full bg-purple-500" />
+              Zero Cloud Uploads
+            </div>
+          </div>
         </div>
 
-        <form onSubmit={handleJoinRoom} className="space-y-3">
-          <div className="relative flex items-center p-1 bg-secondary/50 rounded-3xl border border-border/50 focus-within:border-primary/30 transition-all shadow-inner">
+        <div className="relative flex items-center py-2">
+          <div className="flex-grow border-t border-border/40"></div>
+          <span className="flex-shrink-0 mx-6 text-muted-foreground text-[10px] font-black uppercase tracking-[0.3em]">Join Existing</span>
+          <div className="flex-grow border-t border-border/40"></div>
+        </div>
+
+        <form onSubmit={handleJoinRoom} className="space-y-4">
+          <div className="relative group">
             <input
               type="text"
-              placeholder="ROOM CODE"
+              placeholder="ENTER ROOM CODE"
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-              className="w-full bg-transparent rounded-2xl px-5 py-4 focus:outline-none transition-all text-center text-xl tracking-[0.3em] font-black placeholder:tracking-[0.1em] placeholder:font-bold placeholder:text-[10px] placeholder:opacity-50"
+              className="w-full bg-secondary/40 backdrop-blur-md rounded-2xl px-6 py-5 focus:outline-none focus:ring-2 focus:ring-primary/20 border border-border/60 transition-all text-center text-2xl tracking-[0.4em] font-black placeholder:tracking-[0.1em] placeholder:font-black placeholder:text-[10px] placeholder:text-muted-foreground/40 shadow-inner"
               maxLength={6}
             />
-            <button
-              type="submit"
-              disabled={loading || !joinCode}
-              className="absolute right-1 px-8 py-3 bg-primary text-primary-foreground rounded-2xl font-bold hover:opacity-90 transition-all disabled:opacity-20 active:scale-95"
-            >
-              Join
-            </button>
+            <AnimatePresence>
+              {joinCode.length === 6 && (
+                <motion.button
+                  initial={{ opacity: 0, scale: 0.9, x: 10 }}
+                  animate={{ opacity: 1, scale: 1, x: 0 }}
+                  exit={{ opacity: 0, scale: 0.9, x: 10 }}
+                  type="submit"
+                  disabled={loading}
+                  className="absolute right-2 top-2 bottom-2 px-6 bg-primary text-primary-foreground rounded-xl font-black text-xs uppercase tracking-widest hover:opacity-90 transition-all shadow-lg active:scale-95"
+                >
+                  Join
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
           {error && (
             <motion.p 
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-destructive text-xs font-bold text-center px-4"
+              className="text-destructive text-[10px] font-black uppercase tracking-widest text-center px-4"
             >
               {error}
             </motion.p>
@@ -156,7 +183,7 @@ const Home: React.FC = () => {
       </div>
 
       {/* Nearby Device Discovery */}
-      <div className="mt-8 pt-6 border-t border-border/40">
+      <div className="mt-12 pt-10 border-t border-border/40">
         <NearbyDevices
           onRoomJoined={(roomId) => {
             setRoomId(roomId);
