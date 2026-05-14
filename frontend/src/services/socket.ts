@@ -4,8 +4,10 @@ import { useStore } from '../store/useStore';
 import { WebRTCService } from './webrtc';
 
 const SERVER_URL = import.meta.env.PROD 
-  ? import.meta.env.VITE_BACKEND_URL 
+  ? 'https://flashdrop-production.up.railway.app'  // Railway URL (Failsafe hardcoded)
   : `http://${window.location.hostname}:3001`;
+
+console.log('[Socket] Connecting to:', SERVER_URL);
 
 class SocketService {
   public socket: Socket<ServerToClientEvents, ClientToServerEvents> | null = null;
