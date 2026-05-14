@@ -85,9 +85,9 @@ const Home: React.FC = () => {
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="w-20 h-20 bg-primary/5 rounded-3xl flex items-center justify-center mb-6 ring-1 ring-primary/10 shadow-inner"
+          className="w-24 h-24 flex items-center justify-center mb-4"
         >
-          <Share2 className="w-10 h-10 text-primary" />
+          <img src="/logo.png" alt="FlashDrop Logo" className="w-full h-full object-contain drop-shadow-[0_0_15px_rgba(45,212,191,0.5)]" />
         </motion.div>
         <h1 className="text-4xl sm:text-5xl font-black tracking-tighter mb-3 text-shimmer">
           FlashDrop
