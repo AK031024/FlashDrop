@@ -126,19 +126,19 @@ const Home: React.FC = () => {
         </div>
 
         <form onSubmit={handleJoinRoom} className="space-y-3">
-          <div className="flex gap-2 p-1 bg-secondary/50 rounded-3xl border border-border/50 focus-within:border-primary/30 transition-all shadow-inner">
+          <div className="relative flex items-center p-1 bg-secondary/50 rounded-3xl border border-border/50 focus-within:border-primary/30 transition-all shadow-inner">
             <input
               type="text"
               placeholder="ROOM CODE"
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
-              className="flex-1 bg-transparent rounded-2xl px-5 py-4 focus:outline-none transition-all text-center text-xl tracking-[0.3em] font-black placeholder:tracking-normal placeholder:font-bold placeholder:text-xs placeholder:opacity-50"
+              className="w-full bg-transparent rounded-2xl px-5 py-4 focus:outline-none transition-all text-center text-xl tracking-[0.3em] font-black placeholder:tracking-[0.1em] placeholder:font-bold placeholder:text-[10px] placeholder:opacity-50"
               maxLength={6}
             />
             <button
               type="submit"
               disabled={loading || !joinCode}
-              className="px-8 bg-primary text-primary-foreground rounded-2xl font-bold hover:opacity-90 transition-all disabled:opacity-0 disabled:scale-90 active:scale-95"
+              className="absolute right-1 px-8 py-3 bg-primary text-primary-foreground rounded-2xl font-bold hover:opacity-90 transition-all disabled:opacity-20 active:scale-95"
             >
               Join
             </button>
