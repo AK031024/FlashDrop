@@ -124,9 +124,10 @@ io.on('connection', (socket: Socket) => {
 
     const newUser: User = { ...user, id: socket.id };
     
-    // Check if user already in room
+    // If user already in room, treat as success (idempotent)
     if (room.users.has(socket.id)) {
-      return callback({ success: false, error: 'Already in room' });
+      const currentUsers = Array.from(room.users.values()).filter(u => u.id !== socket.id);
+      return callback({ success: true, users: currentUsers });
     }
 
     socket.join(roomId);
