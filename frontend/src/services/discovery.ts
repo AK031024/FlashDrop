@@ -3,7 +3,7 @@ import type { ClientToServerEvents, ServerToClientEvents, NearbyDevice } from '.
 import { useStore } from '../store/useStore';
 
 const SERVER_URL = import.meta.env.PROD
-  ? import.meta.env.VITE_BACKEND_URL
+  ? 'https://flashdrop-production.up.railway.app'
   : `http://${window.location.hostname}:3001`;
 
 export const getDeviceName = (): string => {
@@ -41,6 +41,13 @@ class DiscoveryService {
     this.socket.on('connect', () => {
       this.announcePresence();
     });
+
+    // Periodically re-announce to stay visible
+    setInterval(() => {
+      if (this.socket?.connected) {
+        this.announcePresence();
+      }
+    }, 30000);
 
     // Server pushes an updated list whenever any device joins/leaves
     this.socket.on('nearby-devices', (devices: NearbyDevice[]) => {
