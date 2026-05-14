@@ -48,8 +48,6 @@ const DeviceCard: React.FC<Props> = ({ user, isMe }) => {
 
   return (
     <div className="relative group">
-  return (
-    <div className="relative group">
       <motion.div 
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}

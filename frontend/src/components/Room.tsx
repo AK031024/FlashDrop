@@ -6,7 +6,7 @@ import DeviceCard from './DeviceCard';
 import DropZone from './DropZone';
 import TransferList from './TransferList';
 import TextShare from './TextShare';
-import { LogOut, Link2, WifiOff, Share2 } from 'lucide-react';
+import { LogOut, Link2, WifiOff, Share2, Monitor } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Room: React.FC = () => {
