@@ -52,21 +52,21 @@ const DeviceCard: React.FC<Props> = ({ user, isMe }) => {
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         whileHover={{ y: -2, scale: 1.02 }}
-        className={`p-5 rounded-3xl border transition-all duration-300 w-full ${
+        className={`p-4 sm:p-5 rounded-3xl border transition-all duration-300 w-full ${
           isMe 
             ? 'bg-primary/5 border-primary/20 shadow-inner' 
             : 'bg-card/40 backdrop-blur-md border-border/80 shadow-lg'
         }`}
       >
-        <div className="flex flex-col items-center gap-4">
-          <div className="relative">
-            <div className={`w-16 h-16 rounded-3xl flex items-center justify-center shadow-2xl transition-transform duration-500 group-hover:rotate-6 ${
+        <div className="flex flex-row sm:flex-col items-center gap-4">
+          <div className="relative shrink-0">
+            <div className={`w-12 h-12 sm:w-16 sm:h-16 rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-2xl transition-transform duration-500 group-hover:rotate-6 ${
               isMe ? 'bg-primary text-primary-foreground' : 'bg-secondary border border-border/50'
             }`}>
               {getIcon()}
             </div>
             {!isMe && stats && (
-              <span className={`absolute -top-1 -right-1 w-4 h-4 rounded-full border-2 border-card flex items-center justify-center shadow-sm ${
+              <span className={`absolute -top-1 -right-1 w-3.5 h-3.5 sm:w-4 sm:h-4 rounded-full border-2 border-card flex items-center justify-center shadow-sm ${
                 stats.quality === 'Excellent' || stats.quality === 'Good' ? 'bg-green-500' : 
                 stats.quality === 'Weak' ? 'bg-yellow-500' : 'bg-red-500'
               }`}>
@@ -75,13 +75,13 @@ const DeviceCard: React.FC<Props> = ({ user, isMe }) => {
             )}
           </div>
 
-          <div className="text-center w-full min-w-0">
-            <p className="font-black text-sm truncate tracking-tight text-foreground/90 px-1" title={user.name}>
+          <div className="text-left sm:text-center w-full min-w-0">
+            <p className="font-black text-sm sm:text-base truncate tracking-tight text-foreground/90" title={user.name}>
               {user.name}
             </p>
-            <div className="flex items-center justify-center gap-1.5 mt-1">
+            <div className="flex items-center justify-start sm:justify-center gap-1.5 mt-0.5 sm:mt-1">
               <div className={`w-1.5 h-1.5 rounded-full ${isMe ? 'bg-primary animate-pulse' : (stats?.quality === 'Connecting' ? 'bg-yellow-500 animate-bounce' : 'bg-green-500')}`} />
-              <p className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
+              <p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-muted-foreground/80">
                 {isMe ? 'You' : (stats?.quality === 'Connecting' ? 'Connecting' : 'Online')}
               </p>
             </div>
