@@ -62,7 +62,7 @@ const DropZone: React.FC = () => {
     setShowCompressionModal(false);
     
     // Process files sequentially to avoid freezing UI completely if large
-    const processedFiles = [];
+    const processedFiles: File[] = [];
     for (const file of files) {
       if (isCompressible(file)) {
         const compressed = await compressFile(file, mode);
