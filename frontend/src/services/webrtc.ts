@@ -1,6 +1,6 @@
 import { socketService } from './socket';
 import { useStore } from '../store/useStore';
-import type { FileChunkData, FileMetadata, SharedText } from '../../../shared/types';
+import type { FileChunkData, FileMetadata } from '../../../shared/types';
 import { v4 as uuidv4 } from 'uuid';
 
 // Binary header layout per chunk: [fileId: 36 bytes][chunkIndex: 4 bytes][totalChunks: 4 bytes] = 44 bytes
@@ -44,7 +44,7 @@ export class WebRTCService {
   };
 
   private pendingCandidates: Map<string, RTCIceCandidateInit[]> = new Map();
-  private statsIntervals: Map<string, NodeJS.Timeout> = new Map();
+  private statsIntervals: Map<string, any> = new Map();
   private lastBytes: Map<string, number> = new Map();
 
   createPeerConnection(peerId: string, initiator: boolean) {
@@ -238,7 +238,7 @@ export class WebRTCService {
     if (typeof data === 'string') {
       const message = JSON.parse(data);
       if (message.type === 'text') {
-        useStore.getState().addSharedText(message.payload as SharedText);
+        useStore.getState().addSharedText(message.payload);
       } else if (message.type === 'file-meta') {
         this.handleFileMeta(peerId, message.payload as FileMetadata);
       } else if (message.type === 'file-ack') {
@@ -289,7 +289,7 @@ export class WebRTCService {
     const me = useStore.getState().me;
     if (!me) return;
 
-    const message: SharedText = {
+    const message = {
       id: uuidv4(),
       text,
       senderId: me.id,
