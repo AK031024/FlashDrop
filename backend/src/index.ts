@@ -15,7 +15,8 @@ const log = (msg: string) => console.log(`[${new Date().toISOString()}] ${msg}`)
 const io = new Server(server, {
   cors: {
     origin: '*',
-    methods: ['GET', 'POST']
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
 
