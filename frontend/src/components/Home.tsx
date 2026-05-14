@@ -73,11 +73,12 @@ const Home: React.FC = () => {
   };
 
   return (
-    <motion.div 
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      className="w-full max-w-md p-8 sm:p-10 rounded-4xl bg-card/60 backdrop-blur-2xl border border-border/80 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] my-auto relative overflow-hidden"
-    >
+    <div className="min-h-screen w-full flex items-center justify-center p-4 sm:p-8 mesh-bg overflow-y-auto">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.95 }}
+        animate={{ opacity: 1, scale: 1 }}
+        className="w-full max-w-md p-8 sm:p-10 rounded-4xl bg-card/60 backdrop-blur-2xl border border-border/80 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.5)] relative overflow-hidden"
+      >
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
       
       <div className="flex flex-col items-center mb-10">
@@ -171,7 +172,8 @@ const Home: React.FC = () => {
           <Smartphone className="w-7 h-7 transition-colors" />
         </motion.div>
       </div>
-    </motion.div>
+      </motion.div>
+    </div>
   );
 };
 
