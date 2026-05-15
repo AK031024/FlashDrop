@@ -19,6 +19,9 @@ export class WebRTCService {
   private dataChannels: Map<string, RTCDataChannel> = new Map();
   private incomingFiles: Map<string, IncomingFile> = new Map();
   private activeOutgoingFiles: Map<string, File> = new Map();
+  private outgoingQueue: Map<string, { file: File; fileId: string; offset: number }[]> = new Map();
+  private activeOutgoingTransfers: Map<string, number> = new Map();
+  private readonly MAX_CONCURRENT_OUTGOING = 3;
 
   private config: RTCConfiguration = {
     iceServers: [
@@ -104,6 +107,8 @@ export class WebRTCService {
       this.dataChannels.delete(peerId);
     }
     this.pendingCandidates.delete(peerId);
+    this.outgoingQueue.delete(peerId);
+    this.activeOutgoingTransfers.delete(peerId);
 
     const transfers = useStore.getState().transfers;
     Object.values(transfers).forEach(transfer => {
@@ -253,18 +258,15 @@ export class WebRTCService {
     console.log('[WebRTC] Got file-ack, fileId:', payload.fileId, 'resumeFrom:', payload.resumeFrom);
     const file = this.activeOutgoingFiles.get(payload.fileId);
     if (!file) {
-      console.error('[WebRTC] handleFileAck: file NOT found in activeOutgoingFiles for id:', payload.fileId, 'keys:', [...this.activeOutgoingFiles.keys()]);
+      console.error('[WebRTC] handleFileAck: file NOT found in activeOutgoingFiles for id:', payload.fileId);
       return;
     }
-    console.log('[WebRTC] Starting sendFileChunks for:', file.name);
-
-    const dc = this.dataChannels.get(peerId);
-    if (!dc || dc.readyState !== 'open') return;
 
     const turbo = useStore.getState().turboLanMode;
     const CHUNK_SIZE = turbo ? 250 * 1024 : 64 * 1024;
     const offset = payload.resumeFrom * CHUNK_SIZE;
 
+    // Add to store as pending if not exists
     const existingTransfer = useStore.getState().transfers[payload.fileId];
     if (!existingTransfer) {
       useStore.getState().addTransfer({
@@ -274,15 +276,48 @@ export class WebRTCService {
         progress: (offset / file.size) * 100,
         speed: 0,
         eta: 0,
-        status: 'transferring',
+        status: 'pending',
         direction: 'outgoing',
         peerId
       });
-    } else {
-      useStore.getState().updateTransfer(payload.fileId, { status: 'transferring' });
     }
 
-    this.sendFileChunks(dc, file, payload.fileId, offset);
+    // Add to queue
+    if (!this.outgoingQueue.has(peerId)) {
+      this.outgoingQueue.set(peerId, []);
+    }
+    this.outgoingQueue.get(peerId)!.push({ file, fileId: payload.fileId, offset });
+
+    // Try to process queue
+    this.processOutgoingQueue(peerId);
+  }
+
+  private async processOutgoingQueue(peerId: string) {
+    const queue = this.outgoingQueue.get(peerId) || [];
+    const active = this.activeOutgoingTransfers.get(peerId) || 0;
+    const dc = this.dataChannels.get(peerId);
+
+    if (active >= this.MAX_CONCURRENT_OUTGOING || queue.length === 0 || !dc || dc.readyState !== 'open') {
+      return;
+    }
+
+    // Start next transfer
+    const { file, fileId, offset } = queue.shift()!;
+    this.activeOutgoingTransfers.set(peerId, active + 1);
+
+    // Mark as transferring
+    useStore.getState().updateTransfer(fileId, { status: 'transferring' });
+
+    try {
+      await this.sendFileChunks(dc, file, fileId, offset);
+    } catch (err) {
+      console.error(`[WebRTC] Failed to send file ${file.name}:`, err);
+      useStore.getState().updateTransfer(fileId, { status: 'failed' });
+    } finally {
+      const newActive = Math.max(0, (this.activeOutgoingTransfers.get(peerId) || 1) - 1);
+      this.activeOutgoingTransfers.set(peerId, newActive);
+      this.processOutgoingQueue(peerId);
+    }
   }
 
   sendText(text: string) {
@@ -463,7 +498,7 @@ export class WebRTCService {
         progress: 0,
         speed: 0,
         eta: 0,
-        status: 'transferring',
+        status: 'pending',
         direction: 'incoming',
         peerId
       });
@@ -504,7 +539,11 @@ export class WebRTCService {
     incoming.receivedCount++;
     incoming.receivedSize += chunkData.byteLength;
 
+    const transfer = useStore.getState().transfers[fileId];
+    const statusUpdate = transfer?.status === 'pending' ? { status: 'transferring' } : {};
+
     useStore.getState().updateTransfer(fileId, {
+      ...statusUpdate,
       progress: (incoming.receivedCount / incoming.totalChunks) * 100
     });
 
